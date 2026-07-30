@@ -103,6 +103,17 @@ textarea{resize:vertical;min-height:64px}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .chip{padding:7px 12px;border-radius:99px;background:var(--bg);font-size:13px;border:1px solid var(--line)}
 .chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px}
+.pcard{display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 4px;border-radius:14px;background:var(--card);border:1px solid var(--line);cursor:pointer}
+.pcard:active{transform:scale(.96)}
+.pcard .pl{font-size:22px;font-weight:800;color:var(--accent);line-height:1}
+.pcard .pe{font-size:22px;line-height:1}
+.pcard .pw{font-size:11px;color:var(--sub)}
+.card-flip .ph-sound{font-size:15px;font-weight:700;margin-top:4px;opacity:.95}
+.cvc{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:14px;background:var(--card);border:1px solid var(--line);margin-bottom:8px}
+.cvc .cs{font-size:20px;font-weight:800}
+.cvc .ca{font-size:17px;font-weight:700;color:var(--accent)}
+.cvc .cw{font-size:14px;flex:1}
 .trip{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px;background:var(--bg)}
 .trip.done{border-color:var(--good)}
 .trip .th{display:flex;justify-content:space-between;align-items:center;gap:8px}
@@ -510,13 +521,13 @@ const MODULES=[
      if(f){const rd=new FileReader();rd.onload=()=>{let d=rd.result;if(d.length>300000)d=d.slice(0,50);done(d);};rd.readAsDataURL(f);}else done(null);
    };
   }},
- {id:'edu',name:'教育辅导',icon:'🎓',color:'#6366f1',desc:'拼音/算术/英语',
+ {id:'edu',name:'教育辅导',icon:'🎓',color:'#6366f1',desc:'幼小衔接',
   render(b){let tab='pinyin';
    const draw=()=>{
      b.innerHTML=`<div class="tabs">
         <button data-t="pinyin" class="${tab==='pinyin'?'on':''}">拼音</button>
         <button data-t="arith" class="${tab==='arith'?'on':''}">算术</button>
-        <button data-t="en" class="${tab==='en'?'on':''}">英语启蒙</button>
+        <button data-t="en" class="${tab==='en'?'on':''}">自然拼读</button>
         <button data-t="write" class="${tab==='write'?'on':''}">写字</button>
      </div><div id="edu_body"></div>`;
      b.querySelectorAll('.tabs button').forEach(x=>x.onclick=()=>{tab=x.dataset.t;draw();});
@@ -531,15 +542,23 @@ const MODULES=[
 ];
 const M_BY=Object.fromEntries(MODULES.map(m=>[m.id,m]));
 /* ---------- 教育子模块 ---------- */
-const PINYIN=[['bà ba','爸爸'],['mā ma','妈妈'],['gē ge','哥哥'],['jiě jie','姐姐'],['yé ye','爷爷'],['nǎi nai','奶奶'],
- ['xiǎo gǒu','小狗'],['xiǎo māo','小猫'],['hóng huā','红花'],['lán tiān','蓝天'],['bái yún','白云'],['lǜ shù','绿树'],
- ['shū bāo','书包'],['qiān bǐ','铅笔'],['píng guǒ','苹果'],['xiāng jiāo','香蕉'],['xuě huā','雪花'],['yuè liang','月亮'],
- ['tài yáng','太阳'],['shān shuǐ','山水'],['huǒ chē','火车'],['fēi jī','飞机'],['yǔ sǎn','雨伞'],['mù mǎ','木马']];
-const EN_WORDS=[['🐶','dog','狗'],['🐱','cat','猫'],['🐘','elephant','大象'],['🦁','lion','狮子'],['🐯','tiger','老虎'],['🐰','rabbit','兔子'],
- ['🍎','apple','苹果'],['🍌','banana','香蕉'],['🍓','strawberry','草莓'],['🍉','watermelon','西瓜'],['🍇','grape','葡萄'],['🍊','orange','橘子'],
- ['🔴','red','红色'],['🟡','yellow','黄色'],['🔵','blue','蓝色'],['🟢','green','绿色'],['⚪','white','白色'],['⚫','black','黑色'],
- ['1','one','一'],['2','two','二'],['3','three','三'],['4','four','四'],['5','five','五'],['10','ten','十'],
- ['👨','father','爸爸'],['👩','mother','妈妈'],['👧','girl','女孩'],['👦','boy','男孩'],['⭐','star','星星'],['🌞','sun','太阳']];
+const SHENGMU=[['b','🎈','bō 波'],['p','🫧','pá 爬'],['m','👩','mā 妈'],['f','✈️','fēi 飞'],['d','👦','dì 弟'],
+ ['t','🐰','tù 兔'],['n','🥛','niú 牛'],['l','🐴','lǘ 驴'],['g','🧱','gē 哥'],['k','🐸','kē 蝌'],
+ ['h','💧','hē 喝'],['j','🧩','jī 积'],['q','🎈','qì 气'],['x','🍉','xī 西'],['zh','🕷️','zhī 蜘'],
+ ['ch','🍬','chī 吃'],['sh','🦁','shī 狮'],['r','☀️','rì 日'],['z','📕','zì 字'],['c','🦔','cì 刺'],
+ ['s','🧵','sī 丝'],['y','👕','yī 衣'],['w','🐢','wū 乌']];
+const YUNMU=[['a','👄','ā 啊'],['o','🥚','ō 喔'],['e','🦢','é 鹅'],['i','👕','yī 衣'],['u','🐦','wū 乌'],['ü','🐟','yú 鱼'],
+ ['ai','❤️','ài 爱'],['ei','👂','ēi 诶'],['ui','🧣','wéi 围'],['ao','🧥','ǎo 袄'],['ou','🪷','ǒu 藕'],['iu','🛢️','yóu 油'],
+ ['ie','🙌','yē 耶'],['üe','🌙','yuè 月'],['er','👂','ěr 耳'],['an','🛡️','ān 安'],['en','🤧','ēn 恩'],['in','🎵','yīn 音'],
+ ['un','☁️','yún 云'],['ün','😵','yūn 晕'],['ang','📣','áng 昂'],['eng','💡','dēng 灯'],['ing','🦅','yīng 鹰'],['ong','🔔','zhōng 钟']];
+const PHONICS=[['A','/æ/','apple','🍎'],['B','/b/','ball','⚽'],['C','/k/','cat','🐱'],['D','/d/','dog','🐶'],['E','/e/','egg','🥚'],
+ ['F','/f/','fish','🐟'],['G','/g/','gift','🎁'],['H','/h/','hat','🎩'],['I','/i/','igloo','🧊'],['J','/j/','jam','🍓'],
+ ['K','/k/','kite','🪁'],['L','/l/','lion','🦁'],['M','/m/','monkey','🐵'],['N','/n/','nose','👃'],['O','/o/','orange','🍊'],
+ ['P','/p/','pig','🐷'],['Q','/kw/','queen','👑'],['R','/r/','rabbit','🐰'],['S','/s/','sun','☀️'],['T','/t/','tiger','🐯'],
+ ['U','/u/','umbrella','☂️'],['V','/v/','violin','🎻'],['W','/w/','whale','🐳'],['X','/ks/','box','📦'],['Y','/j/','yellow','💛'],
+ ['Z','/z/','zebra','🦓']];
+const CVC=[['c','a','t','cat','🐱'],['d','o','g','dog','🐶'],['p','i','g','pig','🐷'],['s','u','n','sun','☀️'],
+ ['b','u','s','bus','🚌'],['r','u','n','run','🏃'],['m','a','p','map','🗺️'],['b','i','g','big','🔍']];
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function flashCard(eb,data,frontKey,picKey,backKey,revealLabel,spkKey,spkLang){
   let order=shuffle(data);let i=0;let reveal=false;
@@ -564,8 +583,46 @@ function flashCard(eb,data,frontKey,picKey,backKey,revealLabel,spkKey,spkLang){
   };
   card();
 }
-function renderPinyin(eb){flashCard(eb,PINYIN,0,null,1,null,1,'zh-CN');}
-function renderEn(eb){flashCard(eb,EN_WORDS,1,0,2,'中文意思',1,'en-US');}
+function renderPinyin(eb){
+  eb.innerHTML=`
+   <div class="sec"><h3>🔤 声母（23个）· 点卡片听发音</h3>
+     <div class="grid">${SHENGMU.map((s,i)=>`<button class="pcard" data-k="s" data-i="${i}"><span class="pl">${s[0]}</span><span class="pe">${s[1]}</span><span class="pw">${s[2]}</span></button>`).join('')}</div>
+   </div>
+   <div class="sec"><h3>🔡 韵母（24个）· 点卡片听发音</h3>
+     <div class="grid">${YUNMU.map((s,i)=>`<button class="pcard" data-k="y" data-i="${i}"><span class="pl">${s[0]}</span><span class="pe">${s[1]}</span><span class="pw">${s[2]}</span></button>`).join('')}</div>
+   </div>`;
+  eb.querySelectorAll('.pcard').forEach(x=>x.onclick=()=>{const arr=x.dataset.k==='s'?SHENGMU:YUNMU;const it=arr[+x.dataset.i];speak(it[2],'zh-CN');toast(it[0]+' · '+it[2]);});
+}
+function renderEn(eb){
+  let order=shuffle(PHONICS);let i=0;let reveal=false;
+  const card=()=>{const it=order[i];
+    eb.innerHTML=`<div class="sec" style="text-align:center"><h3>🔤 自然拼读 Phonics</h3>
+      <div class="card-flip" id="fc">
+        <div class="pic">${it[3]}</div>
+        <div class="big">${it[0]}</div>
+        <div class="ph-sound">发音 ${it[1]}</div>
+        <div class="hint">${reveal?('单词：'+it[2]+' · 点卡片换下一张'):'点卡片看单词'}</div>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn ghost sm" id="spk">🔊 听单词</button>
+        <button class="btn ghost sm" id="prev">‹</button>
+        <button class="btn ghost sm" id="rnd">🎲</button>
+        <button class="btn ghost sm" id="next">›</button>
+      </div>
+      <div class="s" style="text-align:center;color:var(--sub);margin-top:8px">第 ${i+1} / ${order.length} 个字母</div>
+    </div>
+    <div class="sec"><h3>🔗 拼一拼（CVC 拼读）</h3>
+      ${CVC.map((c,j)=>`<div class="cvc" data-j="${j}"><span class="cs">${c[0]}</span><span class="cs">${c[1]}</span><span class="cs">${c[2]}</span><span class="ca">→ ${c[3]}</span><span class="cw">${c[4]} ${c[3]}</span><button class="btn ghost sm" data-cv="${j}">🔊</button></div>`).join('')}
+    </div>`;
+    eb.querySelector('#fc').onclick=()=>{reveal=!reveal;card();};
+    eb.querySelector('#spk').onclick=(e)=>{e.stopPropagation();speak(it[2],'en-US');};
+    eb.querySelector('#prev').onclick=()=>{i=(i-1+order.length)%order.length;reveal=false;card();};
+    eb.querySelector('#next').onclick=()=>{i=(i+1)%order.length;reveal=false;card();};
+    eb.querySelector('#rnd').onclick=()=>{i=Math.floor(Math.random()*order.length);reveal=false;card();};
+    eb.querySelectorAll('[data-cv]').forEach(x=>x.onclick=(e)=>{e.stopPropagation();const c=CVC[+x.dataset.cv];speak(c[3],'en-US');});
+  };
+  card();
+}
 function renderWrite(eb){
   const CHARS=['一','二','三','人','口','手','日','月','水','火','山','木','大','小','中','上','下','天','土','力','女','儿','门','马','车'];
   let i=0;
@@ -602,8 +659,8 @@ function renderWrite(eb){
 function renderArith(eb){
   let score={c:0,t:0};let q=null;
   const gen=()=>{const op=Math.random()<0.5?'+':'-';let a,b;
-    if(op==='+'){a=Math.floor(Math.random()*20);b=Math.floor(Math.random()*20);}
-    else{a=Math.floor(Math.random()*20)+1;b=Math.floor(Math.random()*(a+1));}
+    if(op==='+'){a=Math.floor(Math.random()*10);b=Math.floor(Math.random()*(10-a));}
+    else{a=Math.floor(Math.random()*10)+1;b=Math.floor(Math.random()*(a+1));}
     q={a,b,op,ans:op==='+'?a+b:a-b};};
   const ui=()=>{eb.innerHTML=`
     <div class="sec" style="text-align:center"><h3>🧮 算术练习</h3>
