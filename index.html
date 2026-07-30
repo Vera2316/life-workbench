@@ -120,6 +120,20 @@ canvas{max-width:100%}
   padding-bottom:calc(28px + env(safe-area-inset-bottom))}
 .modal h3{margin:4px 0 14px;font-size:17px}
 .modal .row{margin-bottom:10px}
+.spk{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--bg);border:1px solid var(--line);font-size:15px;flex:none}
+.spk:active{transform:scale(.9)}
+.dlg{background:var(--bg);border-radius:14px;padding:10px 12px;margin-bottom:10px}
+.dlg .ln{display:flex;align-items:flex-start;gap:8px;padding:5px 0}
+.dlg .who{font-size:11px;color:var(--sub);width:40px;flex:none}
+.dlg .tx{flex:1;min-width:0}
+.dlg .en{font-weight:600;font-size:15px}
+.dlg .zh{font-size:12px;color:var(--sub);margin-top:1px}
+.day{border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:12px;background:var(--bg)}
+.day .dh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
+.day .dl{font-weight:700;font-size:14px}
+.act{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-top:1px dashed var(--line)}
+.act .tm{font-size:12px;color:var(--accent);width:56px;flex:none;font-weight:700}
+.act .at{flex:1;min-width:0}
 </style>
 </head>
 <body>
@@ -181,31 +195,26 @@ const pretty=d=>{const x=parse(d);return (x.getMonth()+1)+'月'+x.getDate()+'日
 /* ---------- 通用 ---------- */
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1600);}
 function esc(s){return (''+s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function speak(text,lang){try{if(!('speechSynthesis'in window)){toast('此设备不支持朗读');return;}window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang||'en-US';u.rate=0.9;window.speechSynthesis.speak(u);}catch(e){}}
 function checkedToday(id){const t=today();return !!ckMap(id)[t]||recs(id).some(r=>r.date===t);}
 function streakOf(id){let n=0;let d=today();const cm=ckMap(id);const rs=recs(id);for(let i=0;i<400;i++){const ok=cm[d]||rs.some(r=>r.date===d);if(ok)n++;else if(i>0)break;d=addDays(d,-1);}return n;}
 /* ---------- 视图切换 ---------- */
 function showView(v){document.getElementById('home').classList.toggle('hide',v!=='home');document.getElementById('detail').classList.toggle('hide',v!=='detail');window.scrollTo(0,0);}
 /* ---------- 模块定义 ---------- */
 const MODULES=[
- {id:'english',name:'英语学习',icon:'🇬🇧',color:'#3b82f6',desc:'每日学一点',
-  render(b){const t=today();
-   b.innerHTML=`
-   <div class="sec"><h3>📝 今日学习打卡</h3>
-     <div class="field"><label>学习内容（单词 / 句子 / 课程）</label><input id="e_c" placeholder="如：新概念第5课 / 背20个单词"></div>
-     <div class="row">
-       <div class="field"><label>时长（分钟）</label><input id="e_m" type="number" inputmode="numeric" placeholder="30"></div>
-       <div class="field"><label>掌握程度</label><select id="e_l"><option>入门</option><option>熟悉</option><option>熟练</option><option>精通</option></select></div>
-     </div>
-     <button class="btn" id="e_add">保存并打卡</button>
-   </div>
-   <div class="sec"><h3>📚 学习记录</h3><div class="list" id="e_list"></div></div>`;
-   const list=()=>{const a=recs('english').slice().reverse();const el=b.querySelector('#e_list');
-     if(!a.length){el.innerHTML='<div class="empty">还没有记录，今天开始第一笔吧 ✍️</div>';return;}
-     el.innerHTML=a.map((r,i)=>`<div class="item"><span class="dot"></span><div class="body"><div class="t">${esc(r.content||'学习')} · ${esc(r.level||'')}</div><div class="s">${r.min?r.min+' 分钟':''}</div></div><span class="dd">${fmt(r.date)}</span><button class="del" data-i="${i}">🗑</button></div>`).join('');
-     el.querySelectorAll('.del').forEach(x=>x.onclick=()=>{delRec('english',a.length-1-(+x.dataset.i));refresh('english');toast('已删除');});};
-   list();
-   b.querySelector('#e_add').onclick=()=>{const c=b.querySelector('#e_c').value.trim();if(!c){toast('请填写学习内容');return;}
-     addRec('english',{date:t,content:c,min:b.querySelector('#e_m').value,level:b.querySelector('#e_l').value});refresh('english');toast('打卡成功 🎉');};
+ {id:'english',name:'英语学习',icon:'🇬🇧',color:'#3b82f6',desc:'单词·口语',
+  render(b){let tab='words';
+   const draw=()=>{
+     b.innerHTML=`<div class="tabs">
+        <button data-t="log" class="${tab==='log'?'on':''}">我的打卡</button>
+        <button data-t="words" class="${tab==='words'?'on':''}">单词卡</button>
+        <button data-t="talk" class="${tab==='talk'?'on':''}">口语对话</button>
+     </div><div id="en_body"></div>`;
+     b.querySelectorAll('.tabs button').forEach(x=>x.onclick=()=>{tab=x.dataset.t;draw();});
+     const eb=b.querySelector('#en_body');
+     if(tab==='log')enLog(eb); else if(tab==='words')enWords(eb); else enTalk(eb);
+   };
+   draw();
   }},
  {id:'reading',name:'阅读打卡',icon:'📖',color:'#8b5cf6',desc:'与收获',
   render(b){const t=today();
@@ -233,11 +242,58 @@ const MODULES=[
    const last=a.length?a[a.length-1].weight:null;
    const prev=a.length>1?a[a.length-2].weight:null;
    const delta=last!=null&&prev!=null?(last-prev):null;
+   const earliest=a.length?a[0].weight:null;
+   let start=DB.get('cfg:weight_start'); if(start==null)start=earliest;
+   const target=DB.get('cfg:weight_target');
+   const goalDate=DB.get('cfg:weight_goal');
+   // 减重进度
+   let pgHtml='';
+   if(start!=null&&target!=null&&+start>+target){
+     const total=(+start-+target);const cur=last!=null?last:start;const lost=(start-cur);
+     let pct=total>0?(lost/total*100):0;const over=lost>total;pct=Math.max(0,Math.min(100,pct));
+     const remain=Math.max(0,cur-target);
+     pgHtml=`<div class="sec"><h3>🎯 减重进度</h3>
+       <div class="bar"><i style="width:${pct.toFixed(0)}%"></i></div>
+       <div class="stat">
+         <div class="box"><b>${pct.toFixed(0)}%</b><span>完成度</span></div>
+         <div class="box"><b>${(start-cur).toFixed(1)}</b><span>已减 kg</span></div>
+         <div class="box"><b>${remain.toFixed(1)}</b><span>还需减 kg</span></div>
+       </div>
+       <div class="s" style="margin-top:8px">起点 ${start} → 目标 ${target} kg（当前 ${cur!=null?cur:'—'}）${over?'<br><span style="color:var(--good)">已超越目标，太棒了！🎉</span>':''}</div>
+     </div>`;
+   }
+   // 目标倒计时
+   let cdHtml='';
+   if(goalDate){
+     const dl=diffDays(t,goalDate);const cur=last!=null?last:start;
+     const remain=(cur!=null&&target!=null)?Math.max(0,cur-target):null;
+     let txt,rate='';
+     if(remain!=null&&remain<=0)txt='已达成目标 🎉';
+     else if(dl>0){txt='还有 <b>'+dl+'</b> 天';if(remain!=null){const wk=remain/(dl/7);rate='建议每周减 <b>'+wk.toFixed(2)+'</b> kg';}}
+     else if(dl===0)txt='就是今天，冲！';
+     else txt='目标日已过去，记得更新目标 💪';
+     cdHtml=`<div class="sec"><h3>⏳ 目标倒计时</h3>
+       <div class="stat">
+         <div class="box"><b>${dl>=0?dl:'—'}</b><span>距目标日(天)</span></div>
+         <div class="box"><b>${pretty(goalDate)}</b><span>目标日期</span></div>
+       </div>
+       <div class="s" style="margin-top:8px">${txt}${rate?(' · '+rate):''}</div>
+     </div>`;
+   }
    b.innerHTML=`
    <div class="stat">
      <div class="box"><b>${last!=null?last:'—'}</b><span>最新体重 kg</span></div>
      <div class="box"><b>${delta!=null?(delta>0?'+':'')+delta.toFixed(1):'—'}</b><span>较上次</span></div>
      <div class="box"><b>${a.length}</b><span>累计记录</span></div>
+   </div>
+   ${pgHtml}${cdHtml}
+   <div class="sec"><h3>🎯 目标设置</h3>
+     <div class="row">
+       <div class="field"><label>起始体重 kg</label><input id="w_s" type="number" step="0.1" value="${start!=null?start:''}" placeholder="如 70"></div>
+       <div class="field"><label>目标体重 kg</label><input id="w_g" type="number" step="0.1" value="${target!=null?target:''}" placeholder="如 60"></div>
+     </div>
+     <div class="field"><label>目标日期（可选）</label><input id="w_dg" type="date" value="${goalDate||''}"></div>
+     <button class="btn ghost" id="w_set">保存目标</button>
    </div>
    <div class="sec"><h3>📈 体重变化</h3><canvas id="w_cv" width="440" height="200"></canvas></div>
    <div class="sec"><h3>⚖️ 今日称重</h3>
@@ -257,6 +313,12 @@ const MODULES=[
    list();
    b.querySelector('#w_add').onclick=()=>{const v=parseFloat(b.querySelector('#w_v').value);if(!v){toast('请输入体重');return;}
      addRec('weight',{date:b.querySelector('#w_d').value||t,weight:v,note:b.querySelector('#w_n').value.trim()});refresh('weight');toast('已记录 🎉');};
+   const setBtn=b.querySelector('#w_set');if(setBtn)setBtn.onclick=()=>{let s=parseFloat(b.querySelector('#w_s').value);const g=parseFloat(b.querySelector('#w_g').value);const dg=b.querySelector('#w_dg').value;
+     if(!s&&earliest!=null)s=earliest;
+     if(s!=null)DB.set('cfg:weight_start',s);
+     if(g!=null)DB.set('cfg:weight_target',g);
+     if(dg)DB.set('cfg:weight_goal',dg);else DB.del('cfg:weight_goal');
+     refresh('weight');toast('目标已保存 🎯');};
   }},
  {id:'period',name:'经期记录',icon:'🩸',color:'#ec4899',desc:'周期预测',
   render(b){const t=today();const days=recs('period').filter(r=>r.type==='start').map(r=>r.date).sort();
@@ -369,7 +431,7 @@ const MODULES=[
    b.querySelector('#s_set').onclick=()=>{DB.set('goal:savings',{target:+b.querySelector('#s_tg').value||0,deadline:b.querySelector('#s_dl').value||t});refresh('savings');toast('目标已保存');};
    b.querySelector('#s_add').onclick=()=>{const v=parseFloat(b.querySelector('#s_a').value);if(!v){toast('请输入金额');return;}addRec('savings',{date:t,amount:v,note:b.querySelector('#s_n').value.trim()});refresh('savings');toast('已存入 🐷');};
   }},
- {id:'travel',name:'旅行规划',icon:'✈️',color:'#0ea5e9',desc:'行程清单',
+ {id:'travel',name:'旅行规划',icon:'✈️',color:'#0ea5e9',desc:'行程·清单',
   render(b){const a=recs('travel');
    b.innerHTML=`
    <div class="sec"><h3>✈️ 新建行程</h3>
@@ -382,19 +444,51 @@ const MODULES=[
    </div>
    <div id="tr_list"></div>`;
    const list=()=>{const el=b.querySelector('#tr_list');if(!a.length){el.innerHTML='<div class="empty">还没有行程计划 ✈️</div>';return;}
-     el.innerHTML=a.slice().reverse().map((tr,i)=>{const idx=a.length-1-i;const items=(tr.items||[]);const done=items.filter(it=>it.done).length;
+     el.innerHTML=a.slice().reverse().map((tr,ri)=>{const idx=a.length-1-ri;const items=(tr.items||[]);const days=(tr.days||[]);const expenses=(tr.expenses||[]);const spent=expenses.reduce((s,e)=>s+(+e.amount||0),0);const budget=tr.budget||0;const done=items.filter(it=>it.done).length;
        return `<div class="trip ${tr.done?'done':''}">
          <div class="th"><div class="tt">${esc(tr.name)}</div><button class="del" data-idx="${idx}">🗑</button></div>
-         <div class="s">${tr.start?fmt(tr.start):''}${tr.end?' → '+fmt(tr.end):''} · 清单 ${done}/${items.length}</div>
-         <div class="row" style="margin-top:8px"><input id="tr_new_${idx}" placeholder="添加待办，如：订机票"><button class="btn sm" data-add="${idx}">+</button></div>
+         <div class="s">${tr.start?fmt(tr.start):''}${tr.end?' → '+fmt(tr.end):''}</div>
+         <div class="stat" style="margin:8px 0">
+           <div class="box"><b>${spent.toFixed(0)}</b><span>已花(元)</span></div>
+           <div class="box"><b>${budget||0}</b><span>预算(元)</span></div>
+           <div class="box"><b>${budget?Math.round(spent/budget*100):0}%</b><span>花费占比</span></div>
+         </div>
+         <div class="bar"><i style="width:${budget?Math.min(100,Math.round(spent/budget*100)):0}%"></i></div>
+         <div class="field" style="margin-top:8px"><label>💰 预算 / 花费</label>
+           <div class="row"><input id="bg_${idx}" type="number" inputmode="numeric" placeholder="总预算 如 8000"><button class="btn sm" data-setbg="${idx}">设预算</button></div>
+           <div class="row" style="margin-top:8px"><input id="ex_a_${idx}" type="number" step="0.01" inputmode="decimal" placeholder="金额"><input id="ex_n_${idx}" placeholder="备注"><button class="btn sm" data-addex="${idx}">+</button></div>
+         </div>
+         <div id="ex_${idx}">${expenses.map((e,ei)=>`<div class="item"><span class="dot"></span><div class="body"><div class="t">-${e.amount} 元</div><div class="s">${esc(e.note||'')}</div></div><span class="dd">${fmt(e.date)}</span><button class="del" data-idx="${idx}" data-ei="${ei}" data-delex="1">🗑</button></div>`).join('')||'<div class="s" style="padding:4px 0">还没有花费记录</div>'}</div>
+         <div class="field" style="margin-top:8px"><label>📅 添加一天行程</label><div class="row"><input id="day_lbl_${idx}" placeholder="如：第1天 / Day1 大阪"><button class="btn sm" data-addday="${idx}">添加</button></div></div>
+         <div id="days_${idx}">${days.map((d,di)=>{const acts=(d.acts||[]);const ad=acts.filter(x=>x.done).length;
+           return `<div class="day"><div class="dh"><div class="dl">📅 ${esc(d.label||('第'+(di+1)+'天'))}</div><button class="del" data-idx="${idx}" data-di="${di}" data-deld="1">🗑</button></div>
+             <div class="row" style="margin:4px 0"><input id="act_t_${idx}_${di}" placeholder="时间 09:00" style="flex:0 0 84px"><input id="act_x_${idx}_${di}" placeholder="安排，如：参观博物馆"><button class="btn sm" data-addact="${idx}" data-di="${di}">+</button></div>
+             <div id="acts_${idx}_${di}">${acts.map((x,xi)=>`<div class="act"><input type="checkbox" data-idx="${idx}" data-di="${di}" data-xi="${xi}" ${x.done?'checked':''}><div class="at"><div class="tm">${esc(x.time||'')}</div><div>${esc(x.text||'')}</div></div></div>`).join('')||'<div class="s" style="padding:4px 0">暂无安排</div>'}</div>
+           </div>`;}).join('')||'<div class="s" style="padding:6px 0">还没有逐日行程，上面添加 👆</div>'}
+         </div>
+         <div class="field" style="margin-top:8px"><label>🎒 物资 / 待办清单</label><div class="row"><input id="tr_new_${idx}" placeholder="如：订机票、充电宝"><button class="btn sm" data-add="${idx}">+</button></div></div>
          <div id="tr_items_${idx}">${items.map((it,j)=>`<label class="cb"><input type="checkbox" data-idx="${idx}" data-j="${j}" ${it.done?'checked':''}> <span>${esc(it.text)}</span></label>`).join('')||'<div class="s" style="padding:6px 0">暂无待办</div>'}</div>
        </div>`;}).join('');
-     el.querySelectorAll('.del').forEach(x=>x.onclick=()=>{delRec('travel',+x.dataset.idx);refresh('travel');toast('已删除');});
+     el.querySelectorAll('.del').forEach(x=>x.onclick=()=>{const idx=+x.dataset.idx;
+       if(x.dataset.deld){const di=+x.dataset.di;const arr=recs('travel');arr[arr.length-1-idx].days.splice(di,1);setRecs('travel',arr);refresh('travel');return;}
+       if(x.dataset.delex){const ei=+x.dataset.ei;const arr=recs('travel');arr[arr.length-1-idx].expenses.splice(ei,1);setRecs('travel',arr);refresh('travel');return;}
+       delRec('travel',idx);refresh('travel');toast('已删除');});
+     el.querySelectorAll('[data-addday]').forEach(x=>x.onclick=()=>{const idx=+x.dataset.addday;const lbl=b.querySelector('#day_lbl_'+idx).value.trim();const arr=recs('travel');const tr=arr[arr.length-1-idx];tr.days=tr.days||[];tr.days.push({label:lbl,acts:[]});setRecs('travel',arr);refresh('travel');});
+     el.querySelectorAll('[data-addact]').forEach(x=>x.onclick=()=>{const idx=+x.dataset.addact,di=+x.dataset.di;const t=b.querySelector('#act_t_'+idx+'_'+di).value.trim();const x2=b.querySelector('#act_x_'+idx+'_'+di).value.trim();if(!x2){toast('请填写安排');return;}const arr=recs('travel');arr[arr.length-1-idx].days[di].acts.push({time:t,text:x2,done:false});setRecs('travel',arr);refresh('travel');});
      el.querySelectorAll('[data-add]').forEach(x=>x.onclick=()=>{const idx=+x.dataset.add;const inp=b.querySelector('#tr_new_'+idx);const v=inp.value.trim();if(!v)return;const arr=recs('travel');arr[arr.length-1-idx].items=arr[arr.length-1-idx].items||[];arr[arr.length-1-idx].items.push({text:v,done:false});setRecs('travel',arr);refresh('travel');});
-     el.querySelectorAll('input[type=checkbox]').forEach(cb=>cb.onchange=()=>{const idx=+cb.dataset.idx,j=+cb.dataset.j;const arr=recs('travel');arr[arr.length-1-idx].items[j].done=cb.checked;setRecs('travel',arr);const left=arr[arr.length-1-idx].items.filter(it=>!it.done).length;if(left===0){arr[arr.length-1-idx].done=true;setRecs('travel',arr);toast('清单全部完成 🎉');}refresh('travel');});
+     el.querySelectorAll('[data-setbg]').forEach(x=>x.onclick=()=>{const idx=+x.dataset.setbg;const v=+b.querySelector('#bg_'+idx).value||0;const arr=recs('travel');arr[arr.length-1-idx].budget=v;setRecs('travel',arr);refresh('travel');toast('预算已设 💰');});
+     el.querySelectorAll('[data-addex]').forEach(x=>x.onclick=()=>{const idx=+x.dataset.addex;const v=parseFloat(b.querySelector('#ex_a_'+idx).value);if(!v){toast('请输入金额');return;}const arr=recs('travel');arr[arr.length-1-idx].expenses=arr[arr.length-1-idx].expenses||[];arr[arr.length-1-idx].expenses.push({amount:v,note:b.querySelector('#ex_n_'+idx).value.trim(),date:today()});setRecs('travel',arr);refresh('travel');});
+     el.querySelectorAll('input[type=checkbox]').forEach(cb=>cb.onchange=()=>{const idx=+cb.dataset.idx;const arr=recs('travel');const tr=arr[arr.length-1-idx];
+       if(cb.dataset.di!=null){const di=+cb.dataset.di,xi=+cb.dataset.xi;tr.days[di].acts[xi].done=cb.checked;}
+       else{const j=+cb.dataset.j;tr.items[j].done=cb.checked;}
+       setRecs('travel',arr);
+       const allItems=(tr.items||[]).length>0&&(tr.items||[]).every(it=>it.done);
+       const allActs=(tr.days||[]).length>0&&(tr.days||[]).every(d=>(d.acts||[]).length>0&&(d.acts||[]).every(x=>x.done));
+       if(allItems&&allActs){tr.done=true;setRecs('travel',arr);toast('行程全部完成 🎉');}
+       refresh('travel');});
    };
    list();
-   b.querySelector('#tr_add').onclick=()=>{const n=b.querySelector('#tr_n').value.trim();if(!n){toast('请填写目的地');return;}addRec('travel',{date:today(),name:n,start:b.querySelector('#tr_s').value,end:b.querySelector('#tr_e').value,items:[],done:false});refresh('travel');toast('已添加 ✈️');};
+   b.querySelector('#tr_add').onclick=()=>{const n=b.querySelector('#tr_n').value.trim();if(!n){toast('请填写目的地');return;}addRec('travel',{date:today(),name:n,start:b.querySelector('#tr_s').value,end:b.querySelector('#tr_e').value,items:[],days:[],expenses:[],budget:0,done:false});refresh('travel');toast('已添加 ✈️');};
   }},
  {id:'parent',name:'亲子趣事',icon:'👶',color:'#f472b6',desc:'温馨记录',
   render(b){const t=today();
@@ -423,12 +517,14 @@ const MODULES=[
         <button data-t="pinyin" class="${tab==='pinyin'?'on':''}">拼音</button>
         <button data-t="arith" class="${tab==='arith'?'on':''}">算术</button>
         <button data-t="en" class="${tab==='en'?'on':''}">英语启蒙</button>
+        <button data-t="write" class="${tab==='write'?'on':''}">写字</button>
      </div><div id="edu_body"></div>`;
      b.querySelectorAll('.tabs button').forEach(x=>x.onclick=()=>{tab=x.dataset.t;draw();});
      const eb=b.querySelector('#edu_body');
      if(tab==='pinyin')renderPinyin(eb);
      else if(tab==='arith')renderArith(eb);
-     else renderEn(eb);
+     else if(tab==='en')renderEn(eb);
+     else renderWrite(eb);
    };
    draw();
   }}
@@ -445,29 +541,64 @@ const EN_WORDS=[['🐶','dog','狗'],['🐱','cat','猫'],['🐘','elephant','�
  ['1','one','一'],['2','two','二'],['3','three','三'],['4','four','四'],['5','five','五'],['10','ten','十'],
  ['👨','father','爸爸'],['👩','mother','妈妈'],['👧','girl','女孩'],['👦','boy','男孩'],['⭐','star','星星'],['🌞','sun','太阳']];
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function flashCard(eb,data,frontKey,picKey,backKey,revealLabel){
+function flashCard(eb,data,frontKey,picKey,backKey,revealLabel,spkKey,spkLang){
   let order=shuffle(data);let i=0;let reveal=false;
   const card=()=>{const it=order[i];
     eb.innerHTML=`<div class="card-flip" id="fc">
         ${picKey?`<div class="pic">${it[picKey]}</div>`:''}
         <div class="big">${reveal?it[backKey]:it[frontKey]}</div>
-        <div class="hint">${reveal?('点击切换下一张 · '+revealLabel):'点击卡片查看答案'}</div>
+        <div class="hint">${reveal?(revealLabel?('点击切换下一张 · '+revealLabel):'点击切换下一张'):'点击卡片看答案'}</div>
       </div>
       <div class="row" style="margin-top:12px">
-        <button class="btn ghost sm" id="prev">‹ 上一张</button>
-        <button class="btn ghost sm" id="rnd">🎲 随机</button>
-        <button class="btn ghost sm" id="next">下一张 ›</button>
+        ${spkKey!=null?`<button class="btn ghost sm" id="spk">🔊 听发音</button>`:''}
+        <button class="btn ghost sm" id="prev">‹</button>
+        <button class="btn ghost sm" id="rnd">🎲</button>
+        <button class="btn ghost sm" id="next">›</button>
       </div>
       <div class="s" style="text-align:center;color:var(--sub);margin-top:8px">第 ${i+1} / ${order.length} 张</div>`;
     eb.querySelector('#fc').onclick=()=>{reveal=!reveal;card();};
+    if(spkKey!=null)eb.querySelector('#spk').onclick=(e)=>{e.stopPropagation();speak(it[spkKey],spkLang);};
     eb.querySelector('#prev').onclick=()=>{i=(i-1+order.length)%order.length;reveal=false;card();};
     eb.querySelector('#next').onclick=()=>{i=(i+1)%order.length;reveal=false;card();};
     eb.querySelector('#rnd').onclick=()=>{i=Math.floor(Math.random()*order.length);reveal=false;card();};
   };
   card();
 }
-function renderPinyin(eb){flashCard(eb,PINYIN,0,null,1,'拼音');}
-function renderEn(eb){flashCard(eb,EN_WORDS,1,0,2,'中文意思');}
+function renderPinyin(eb){flashCard(eb,PINYIN,0,null,1,null,1,'zh-CN');}
+function renderEn(eb){flashCard(eb,EN_WORDS,1,0,2,'中文意思',1,'en-US');}
+function renderWrite(eb){
+  const CHARS=['一','二','三','人','口','手','日','月','水','火','山','木','大','小','中','上','下','天','土','力','女','儿','门','马','车'];
+  let i=0;
+  const draw=()=>{
+    eb.innerHTML=`<div class="sec" style="text-align:center"><h3>✍️ 写字描红</h3>
+      <canvas id="wc" width="320" height="220" style="width:100%;max-width:340px;background:var(--bg);border:1px solid var(--line);border-radius:14px;touch-action:none"></canvas>
+      <div class="row" style="margin-top:10px;max-width:340px;margin:10px auto 0">
+        <button class="btn ghost sm" id="wprev">‹</button>
+        <button class="btn ghost sm" id="wspk">🔊 听读音</button>
+        <button class="btn ghost sm" id="wclr">清除重描</button>
+        <button class="btn ghost sm" id="wnext">›</button>
+      </div>
+      <div class="s" style="margin-top:6px">${i+1} / ${CHARS.length} · 用手指在框内描红</div></div>`;
+    const cv=eb.querySelector('#wc');const ctx=cv.getContext('2d');
+    const guide=()=>{ctx.clearRect(0,0,cv.width,cv.height);
+      ctx.strokeStyle='#d7dee8';ctx.lineWidth=1;
+      for(let g=1;g<4;g++){const x=g*cv.width/4,y=g*cv.height/4;ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,cv.height);ctx.stroke();ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(cv.width,y);ctx.stroke();}
+      ctx.fillStyle='rgba(59,130,246,0.16)';ctx.font='170px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(CHARS[i],cv.width/2,cv.height/2+8);};
+    guide();
+    let drawing=false;
+    const pos=(e)=>{const r=cv.getBoundingClientRect();const t=e.touches&&e.touches[0]?e.touches[0]:e;return [(t.clientX-r.left)*(cv.width/r.width),(t.clientY-r.top)*(cv.height/r.height)];};
+    const start=(e)=>{e.preventDefault();drawing=true;const[x,y]=pos(e);ctx.strokeStyle='#ef4444';ctx.lineWidth=9;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(x,y);};
+    const move=(e)=>{if(!drawing)return;e.preventDefault();const[x,y]=pos(e);ctx.lineTo(x,y);ctx.stroke();};
+    const end=()=>{drawing=false;};
+    cv.addEventListener('touchstart',start);cv.addEventListener('touchmove',move);cv.addEventListener('touchend',end);
+    cv.addEventListener('mousedown',start);cv.addEventListener('mousemove',move);cv.addEventListener('mouseup',end);
+    eb.querySelector('#wprev').onclick=()=>{i=(i-1+CHARS.length)%CHARS.length;draw();};
+    eb.querySelector('#wnext').onclick=()=>{i=(i+1)%CHARS.length;draw();};
+    eb.querySelector('#wclr').onclick=()=>guide();
+    eb.querySelector('#wspk').onclick=()=>speak(CHARS[i],'zh-CN');
+  };
+  draw();
+}
 function renderArith(eb){
   let score={c:0,t:0};let q=null;
   const gen=()=>{const op=Math.random()<0.5?'+':'-';let a,b;
@@ -483,11 +614,125 @@ function renderArith(eb){
       <div class="s" style="margin-top:8px">正确率：<b id="sc">${score.t?Math.round(score.c/score.t*100):0}%</b>（${score.c}/${score.t}）</div>
     </div>`;
     eb.querySelector('#chk').onclick=()=>{const v=parseInt(eb.querySelector('#ans').value,10);if(isNaN(v)){toast('请输入答案');return;}
-      score.t++;const fb=eb.querySelector('#fb');if(v===q.ans){score.c++;fb.textContent='✅ 答对啦！';fb.className='quiz-fb ok';}else{fb.textContent='❌ 正确答案：'+q.ans;fb.className='quiz-fb no';}
+      score.t++;const fb=eb.querySelector('#fb');if(v===q.ans){score.c++;fb.textContent='✅ 答对啦！';fb.className='quiz-fb ok';speak('答对啦，真棒','zh-CN');}else{fb.textContent='❌ 正确答案：'+q.ans;fb.className='quiz-fb no';speak('正确答案是 '+q.ans,'zh-CN');}
       eb.querySelector('#sc').textContent=Math.round(score.c/score.t*100)+'%';
-      setTimeout(()=>{gen();ui();},900);};
+      setTimeout(()=>{gen();ui();},1100);};
   };
   gen();ui();
+}
+/* ---------- 英语学习：我的打卡 / 单词卡 / 口语对话 ---------- */
+const VOCAB=[['hello','你好','Hello, nice to meet you.'],
+ ['thanks','谢谢','Thank you very much.'],['sorry','抱歉','I am sorry.'],
+ ['please','请','Please help me.'],['water','水','I want some water.'],
+ ['food','食物','The food is delicious.'],['hotel','酒店','We booked a hotel.'],
+ ['airport','机场','Go to the airport.'],['train','火车','The train is late.'],
+ ['bus','公交车','Take the bus, please.'],['money','钱','Do you have money?'],
+ ['today','今天','Today is a good day.'],['tomorrow','明天','See you tomorrow.'],
+ ['help','帮助','Can you help me?'],['bathroom','洗手间','Where is the bathroom?'],
+ ['coffee','咖啡','A cup of coffee, please.'],['tea','茶','I like green tea.'],
+ ['friend','朋友','He is my friend.'],['family','家人','I love my family.'],
+ ['school','学校','The school is near.'],['book','书','This book is interesting.'],
+ ['phone','手机','My phone is dead.'],['happy','开心','I am so happy.'],
+ ['morning','早上','Good morning, everyone.'],['night','晚上','Good night, sleep well.'],
+ ['buy','买','I want to buy this.'],['open','打开','Please open the window.']];
+const DIALOGUES=[
+ {scene:'餐厅点餐',lines:[
+   {who:'你',en:'Hello, a table for two, please.',zh:'你好，要一个两人桌。'},
+   {who:'服务员',en:'Sure, this way please.',zh:'好的，这边请。'},
+   {who:'你',en:'Can I see the menu?',zh:'能给我看看菜单吗？'},
+   {who:'服务员',en:'Here you are.',zh:'给您。'},
+   {who:'你',en:'I would like a coffee and a sandwich.',zh:'我要一杯咖啡和一个三明治。'},
+   {who:'服务员',en:'OK, anything else?',zh:'好的，还要别的吗？'},
+   {who:'你',en:'No, thank you.',zh:'不用了，谢谢。'}]},
+ {scene:'问路',lines:[
+   {who:'你',en:'Excuse me, where is the subway station?',zh:'请问地铁站在哪里？'},
+   {who:'路人',en:'Go straight and turn left.',zh:'直走然后左转。'},
+   {who:'你',en:'Is it far from here?',zh:'离这儿远吗？'},
+   {who:'路人',en:'No, about five minutes.',zh:'不远，大约五分钟。'}]},
+ {scene:'购物',lines:[
+   {who:'你',en:'How much is this?',zh:'这个多少钱？'},
+   {who:'店员',en:'It is fifty yuan.',zh:'五十元。'},
+   {who:'你',en:'Can you give me a discount?',zh:'能便宜一点吗？'},
+   {who:'店员',en:'OK, forty yuan.',zh:'行，四十元。'}]},
+ {scene:'日常问候',lines:[
+   {who:'A',en:'Good morning! How are you?',zh:'早上好！你好吗？'},
+   {who:'B',en:'I am fine, thank you.',zh:'我很好，谢谢。'},
+   {who:'A',en:'Nice to meet you.',zh:'很高兴认识你。'},
+   {who:'B',en:'Nice to meet you, too.',zh:'我也很高兴认识你。'}]},
+ {scene:'酒店入住',lines:[
+   {who:'你',en:'Hello, I have a reservation.',zh:'你好，我有预订。'},
+   {who:'前台',en:'May I see your passport?',zh:'请出示您的护照。'},
+   {who:'你',en:'Sure, here it is.',zh:'好的，给您。'},
+   {who:'前台',en:'Your room is three zero five.',zh:'您的房间是 305 号。'}]},
+ {scene:'看病买药',lines:[
+   {who:'你',en:'I have a headache.',zh:'我头痛。'},
+   {who:'医生',en:'How long have you felt this way?',zh:'这样多久了？'},
+   {who:'你',en:'Since this morning.',zh:'从今天早上开始。'},
+   {who:'医生',en:'Take this medicine twice a day.',zh:'这药每天服两次。'}]},
+ {scene:'聊天气',lines:[
+   {who:'A',en:'What is the weather like today?',zh:'今天天气怎么样？'},
+   {who:'B',en:'It is sunny and warm.',zh:'晴天，很暖和。'},
+   {who:'A',en:'Great, let us go out.',zh:'太好了，我们出去吧。'}]},
+ {scene:'打车',lines:[
+   {who:'你',en:'Please take me to the station.',zh:'请送我去车站。'},
+   {who:'司机',en:'OK, get in please.',zh:'好的，请上车。'},
+   {who:'你',en:'How much is the fare?',zh:'车费多少钱？'},
+   {who:'司机',en:'About thirty yuan.',zh:'大约三十元。'}]}];
+function enLog(eb){const t=today();const a=recs('english').slice().reverse();
+  eb.innerHTML=`<div class="sec"><h3>📝 今日学习打卡</h3>
+     <div class="field"><label>学习内容（单词 / 句子 / 课程）</label><input id="e_c" placeholder="如：新概念第5课 / 背20个单词"></div>
+     <div class="row">
+       <div class="field"><label>时长（分钟）</label><input id="e_m" type="number" inputmode="numeric" placeholder="30"></div>
+       <div class="field"><label>掌握程度</label><select id="e_l"><option>入门</option><option>熟悉</option><option>熟练</option><option>精通</option></select></div>
+     </div>
+     <button class="btn" id="e_add">保存并打卡</button>
+   </div>
+   <div class="sec"><h3>📚 学习记录</h3><div class="list" id="e_list"></div></div>`;
+  const list=()=>{const el=eb.querySelector('#e_list');
+    if(!a.length){el.innerHTML='<div class="empty">还没有记录，今天开始第一笔吧 ✍️</div>';return;}
+    el.innerHTML=a.map((r,i)=>`<div class="item"><span class="dot"></span><div class="body"><div class="t">${esc(r.content||'学习')} · ${esc(r.level||'')}</div><div class="s">${r.min?r.min+' 分钟':''}</div></div><span class="dd">${fmt(r.date)}</span><button class="del" data-i="${i}">🗑</button></div>`).join('');
+    el.querySelectorAll('.del').forEach(x=>x.onclick=()=>{delRec('english',a.length-1-(+x.dataset.i));refresh('english');toast('已删除');});};
+  list();
+  eb.querySelector('#e_add').onclick=()=>{const c=eb.querySelector('#e_c').value.trim();if(!c){toast('请填写学习内容');return;}
+    addRec('english',{date:t,content:c,min:eb.querySelector('#e_m').value,level:eb.querySelector('#e_l').value});refresh('english');toast('打卡成功 🎉');};
+}
+function enWords(eb){let order=shuffle(VOCAB),i=0,rev=false;
+  const card=()=>{const w=order[i];
+    eb.innerHTML=`<div class="card-flip" id="fc">
+        <div class="big">${rev?w[1]:w[0]}</div>
+        ${rev?`<div class="hint" style="font-size:15px">${w[2]}</div>`:''}
+        <div class="hint">${rev?'点击切换下一张':'点击卡片看中文 + 例句'}</div>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn ghost sm" id="spk">🔊 朗读单词</button>
+        <button class="btn ghost sm" id="prev">‹</button>
+        <button class="btn ghost sm" id="rnd">🎲</button>
+        <button class="btn ghost sm" id="next">›</button>
+      </div>
+      <div class="s" style="text-align:center;color:var(--sub);margin-top:8px">第 ${i+1} / ${order.length} 个</div>`;
+    eb.querySelector('#fc').onclick=()=>{rev=!rev;card();};
+    eb.querySelector('#spk').onclick=(e)=>{e.stopPropagation();speak(w[0],'en-US');};
+    eb.querySelector('#prev').onclick=()=>{i=(i-1+order.length)%order.length;rev=false;card();};
+    eb.querySelector('#next').onclick=()=>{i=(i+1)%order.length;rev=false;card();};
+    eb.querySelector('#rnd').onclick=()=>{i=Math.floor(Math.random()*order.length);rev=false;card();};
+  };
+  card();
+}
+function enTalk(eb){let s=0;
+  const draw=()=>{const d=DIALOGUES[s];
+    eb.innerHTML=`<div class="tabs">${DIALOGUES.map((x,si)=>`<button data-s="${si}" class="${s===si?'on':''}">${x.scene}</button>`).join('')}</div>
+      <button class="btn ghost sm" id="playall" style="margin:10px 0">🔊 播放整段对话</button>
+      <div id="dlg"></div>`;
+    eb.querySelectorAll('.tabs button').forEach(x=>x.onclick=()=>{s=+x.dataset.s;draw();});
+    eb.querySelector('#dlg').innerHTML=d.lines.map(l=>`<div class="dlg"><div class="ln">
+        <div class="who">${esc(l.who)}</div>
+        <div class="tx"><div class="en">${esc(l.en)}</div><div class="zh">${esc(l.zh)}</div></div>
+        <button class="spk" data-en="${encodeURIComponent(l.en)}">🔊</button>
+      </div></div>`).join('');
+    eb.querySelectorAll('.spk').forEach(x=>x.onclick=()=>speak(decodeURIComponent(x.dataset.en),'en-US'));
+    eb.querySelector('#playall').onclick=()=>{d.lines.forEach(l=>{const u=new SpeechSynthesisUtterance(l.en);u.lang='en-US';u.rate=0.9;window.speechSynthesis.speak(u);});};
+  };
+  draw();
 }
 /* ---------- 体重图表 ---------- */
 function drawWeight(cv,a){const ctx=cv.getContext('2d');const W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);
