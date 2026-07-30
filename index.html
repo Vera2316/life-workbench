@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="生活工作台">
+<meta name="theme-color" content="#3b82f6">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<link rel="manifest" href='data:application/manifest+json,{"name":"生活工作台","short_name":"工作台","display":"standalone","orientation":"portrait","background_color":"#eef2f9","theme_color":"#3b82f6","start_url":".","icons":[{"src":"data:image/png;base64,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","sizes":"512x512","type":"image/png","purpose":"any"}]}'>
+<title>生活工作台 · 离线版</title>
+<style>
+:root{
+  --bg:#eef2f9; --card:#ffffff; --ink:#1f2733; --sub:#6b7785;
+  --line:#e6ebf2; --accent:#3b82f6; --good:#16a34a; --warn:#f59e0b;
+  --shadow:0 6px 20px rgba(31,39,51,.08); --radius:18px;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0f141b; --card:#1a2230; --ink:#e8edf4; --sub:#93a1b3;
+    --line:#28323f; --shadow:0 6px 20px rgba(0,0,0,.4); }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  background:var(--bg);color:var(--ink);font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;overscroll-behavior:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea,select{font-family:inherit;font-size:16px;color:var(--ink);
+  background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:11px 12px;width:100%;outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+textarea{resize:vertical;min-height:64px}
+#app{max-width:520px;margin:0 auto;min-height:100%;display:flex;flex-direction:column;
+  padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+.hide{display:none!important}
+/* home header */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 6px}
+.topbar h1{font-size:21px;margin:0;font-weight:800;letter-spacing:.5px}
+.topbar .gear{font-size:22px;width:40px;height:40px;border-radius:12px;background:var(--card);
+  box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center}
+.date-line{padding:0 18px 10px;color:var(--sub);font-size:13px}
+.progress-wrap{margin:4px 14px 8px;background:var(--card);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow)}
+.progress-top{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--sub)}
+.progress-top b{font-size:18px;color:var(--ink)}
+.bar{height:10px;background:var(--line);border-radius:99px;margin-top:8px;overflow:hidden}
+.bar > i{display:block;height:100%;background:linear-gradient(90deg,#6ee7b7,#3b82f6);border-radius:99px;transition:width .4s}
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:8px 14px 28px}
+.tile{background:var(--card);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);
+  position:relative;overflow:hidden;border:1px solid var(--line)}
+.tile .ic{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;
+  font-size:22px;margin-bottom:10px}
+.tile .nm{font-weight:700;font-size:15px}
+.tile .meta{font-size:12px;color:var(--sub);margin-top:4px;min-height:16px}
+.tile .done{position:absolute;top:10px;right:10px;font-size:18px}
+.tile .streak{display:inline-block;margin-top:6px;font-size:11px;color:var(--sub);
+  background:var(--bg);border-radius:99px;padding:2px 8px}
+/* detail */
+#detail{flex:1;display:flex;flex-direction:column;min-height:0}
+.detail-head{display:flex;align-items:center;gap:8px;padding:14px 14px 8px}
+.detail-head .back{font-size:17px;font-weight:600;padding:8px 10px 8px 4px;color:var(--accent)}
+.detail-head .dt{font-size:18px;font-weight:800}
+.detail-body{flex:1;overflow-y:auto;padding:6px 14px 30px;-webkit-overflow-scrolling:touch}
+.ckbar{display:flex;align-items:center;justify-content:space-between;background:var(--card);
+  border-radius:16px;padding:12px 14px;box-shadow:var(--shadow);margin-bottom:14px;border:1px solid var(--line)}
+.ckbar .st{font-size:13px;color:var(--sub)}
+.ckbtn{padding:9px 16px;border-radius:12px;font-weight:700;font-size:14px;background:var(--accent);color:#fff}
+.ckbtn.on{background:var(--good)}
+.sec{background:var(--card);border-radius:16px;padding:14px;box-shadow:var(--shadow);margin-bottom:14px;border:1px solid var(--line)}
+.sec h3{margin:0 0 10px;font-size:15px;display:flex;align-items:center;gap:6px}
+.field{margin-bottom:10px}
+.field label{display:block;font-size:12px;color:var(--sub);margin-bottom:4px}
+.row{display:flex;gap:10px}
+.row > *{flex:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 14px;border-radius:12px;
+  background:var(--accent);color:#fff;font-weight:700;font-size:15px;width:100%}
+.btn.ghost{background:var(--bg);color:var(--ink);border:1px solid var(--line)}
+.btn.sm{padding:8px 12px;font-size:13px;width:auto}
+.list{margin-top:6px}
+.item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:none}
+.item .dot{width:8px;height:8px;border-radius:99px;background:var(--accent);margin-top:7px;flex:none}
+.item .body{flex:1;min-width:0}
+.item .t{font-weight:600;font-size:14px;word-break:break-word}
+.item .s{font-size:12px;color:var(--sub);margin-top:2px;word-break:break-word}
+.item .dd{font-size:11px;color:var(--sub);white-space:nowrap}
+.item .del{color:var(--sub);font-size:18px;padding:0 4px}
+.empty{color:var(--sub);font-size:13px;text-align:center;padding:18px 0}
+.stat{display:flex;gap:10px;margin-bottom:12px}
+.stat .box{flex:1;background:var(--bg);border-radius:14px;padding:12px;text-align:center}
+.stat .box b{display:block;font-size:22px}
+.stat .box span{font-size:11px;color:var(--sub)}
+.tabs{display:flex;gap:8px;background:var(--bg);border-radius:14px;padding:4px;margin-bottom:14px}
+.tabs button{flex:1;padding:9px 0;border-radius:11px;font-weight:700;font-size:13px;color:var(--sub)}
+.tabs button.on{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+.card-flip{background:linear-gradient(135deg,#6ee7b7,#3b82f6);border-radius:20px;color:#fff;
+  padding:30px 20px;min-height:230px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;box-shadow:var(--shadow);user-select:none}
+.card-flip .big{font-size:46px;font-weight:800;letter-spacing:1px}
+.card-flip .pic{font-size:60px;margin-bottom:6px}
+.card-flip .hint{font-size:12px;opacity:.85;margin-top:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{padding:7px 12px;border-radius:99px;background:var(--bg);font-size:13px;border:1px solid var(--line)}
+.chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.trip{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px;background:var(--bg)}
+.trip.done{border-color:var(--good)}
+.trip .th{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.trip .th .tt{font-weight:700}
+.cb{display:flex;align-items:center;gap:8px;padding:7px 0}
+.cb input{width:18px;height:18px;flex:none}
+.quiz-fb{text-align:center;font-weight:800;margin-top:10px;min-height:22px}
+.quiz-fb.ok{color:var(--good)} .quiz-fb.no{color:#ef4444}
+canvas{max-width:100%}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);background:rgba(31,39,51,.92);
+  color:#fff;padding:10px 18px;border-radius:99px;font-size:14px;opacity:0;transition:.3s;z-index:50;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:60;display:flex;align-items:flex-end;justify-content:center}
+.modal{background:var(--card);width:100%;max-width:520px;border-radius:22px 22px 0 0;padding:18px 18px 28px;
+  padding-bottom:calc(28px + env(safe-area-inset-bottom))}
+.modal h3{margin:4px 0 14px;font-size:17px}
+.modal .row{margin-bottom:10px}
+</style>
+</head>
+<body>
+<div id="app">
+  <section id="home">
+    <div class="topbar">
+      <h1>🌿 生活工作台</h1>
+      <div style="display:flex;gap:8px">
+        <button class="gear" id="helpBtn" title="安装指引">❓</button>
+        <button class="gear" id="gearBtn" title="设置">⚙️</button>
+      </div>
+    </div>
+    <div class="date-line" id="dateLine"></div>
+    <div class="progress-wrap">
+      <div class="progress-top"><span>今日打卡进度</span><span><b id="pNum">0</b> / <span id="pTot">10</span></span></div>
+      <div class="bar"><i id="pBar" style="width:0%"></i></div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section id="detail" class="hide">
+    <div class="detail-head">
+      <button class="back" id="backBtn">‹ 返回</button>
+      <div class="dt" id="detailTitle"></div>
+    </div>
+    <div class="detail-body">
+      <div class="ckbar" id="ckbar"></div>
+      <div id="moduleBody"></div>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* ---------- 数据层 ---------- */
+const DB={
+  get(k,d){try{const v=localStorage.getItem('wb:'+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},
+  set(k,v){localStorage.setItem('wb:'+k,JSON.stringify(v));},
+  del(k){localStorage.removeItem('wb:'+k);},
+  all(){const o={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.indexOf('wb:')===0)o[k]=localStorage.getItem(k);}return o;}
+};
+const recs=(id)=>DB.get('rec:'+id,[]);
+const setRecs=(id,a)=>DB.set('rec:'+id,a);
+const addRec=(id,r)=>{const a=recs(id);a.push(r);setRecs(id,a);markCk(id,r.date);};
+const delRec=(id,idx)=>{const a=recs(id);a.splice(idx,1);setRecs(id,a);};
+const ckMap=(id)=>DB.get('ck:'+id,{});
+const markCk=(id,d)=>{const m=ckMap(id);m[d]=true;DB.set('ck:'+id,m);};
+const toggleCk=(id,d)=>{const m=ckMap(id);if(m[d])delete m[d];else m[d]=true;DB.set('ck:'+id,m);return !!m[d];};
+/* ---------- 日期 ---------- */
+const pad=n=>(''+n).padStart(2,'0');
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());};
+const fmt=d=>{const p=d.split('-');return p[1]+'/'+p[2];};
+const parse=d=>{const p=d.split('-');return new Date(+p[0],+p[1]-1,+p[2]);};
+const diffDays=(a,b)=>Math.round((parse(b)-parse(a))/864e5);
+const addDays=(d,n)=>{const x=parse(d);x.setDate(x.getDate()+n);return x.getFullYear()+'-'+pad(x.getMonth()+1)+'-'+pad(x.getDate());};
+const WK=['日','一','二','三','四','五','六'];
+const pretty=d=>{const x=parse(d);return (x.getMonth()+1)+'月'+x.getDate()+'日 周'+WK[x.getDay()];};
+/* ---------- 通用 ---------- */
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1600);}
+function esc(s){return (''+s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function checkedToday(id){const t=today();return !!ckMap(id)[t]||recs(id).some(r=>r.date===t);}
+function streakOf(id){let n=0;let d=today();const cm=ckMap(id);const rs=recs(id);for(let i=0;i<400;i++){const ok=cm[d]||rs.some(r=>r.date===d);if(ok)n++;else if(i>0)break;d=addDays(d,-1);}return n;}
+/* ---------- 视图切换 ---------- */
+function showView(v){document.getElementById('home').classList.toggle('hide',v!=='home');document.getElementById('detail').classList.toggle('hide',v!=='detail');window.scrollTo(0,0);}
+/* ---------- 模块定义 ---------- */
+const MODULES=[
+ {id:'english',name:'英语学习',icon:'🇬🇧',color:'#3b82f6',desc:'每日学一点',
+  render(b){const t=today();
+   b.innerHTML=`
+   <div class="sec"><h3>📝 今日学习打卡</h3>
+     <div class="field"><label>学习内容（单词 / 句子 / 课程）</label><input id="e_c" placeholder="如：新概念第5课 / 背20个单词"></div>
+     <div class="row">
+       <div class="field"><label>时长（分钟）</label><input id="e_m" type="number" inputmode="numeric" placeholder="30"></div>
+       <div class="field"><label>掌握程度</label><select id="e_l"><option>入门</option><option>熟悉</option><option>熟练</option><option>精通</option></select></div>
+     </div>
+     <button class="btn" id="e_add">保存并打卡</button>
+   </div>
+   <div class="sec"><h3>📚 学习记录</h3><div class="list" id="e_list"></div></div>`;
+   const list=()=>{const a=recs('english').slice().reverse();const el=b.querySelector('#e_list');
+     if(!a.length){el.innerHTML='<div class="empty">还没有记录，今天开始第一笔吧 ✍️</div>';return;}
+     el.innerHTML=a.map((r,i)=>`<div class="item"><span class="dot"></span><div class="body"><div class="t">${esc(r.content||'学习')} · ${esc(r.level||'')}</div><div class="s">${r.min?r.min+' 分钟':''}</div></div><span class="dd">${fmt(r.date)}</span><button class="del" data-i="${i}">🗑</button></div>`).join('');
+     el.querySelectorAll('.del').forEach(x=>x.onclick=()=>{delRec('english',a.length-1-(+x.dataset.i));refresh('english');toast('已删除');});};
+   list();
+   b.querySelector('#e_add').onclick=()=>{const c=b.querySelector('#e_c').value.trim();if(!c){toast('请填写学习内容');return;}
+     addRec('english',{date:t,content:c,min:b.querySelector('#e_m').value,level:b.querySelector('#e_l').value});refresh('english');toast('打卡成功 🎉');};
+  }},
+ {id:'reading',name:'阅读打卡',icon:'📖',color:'#8b5cf6',desc:'与收获',
+  render(b){const t=today();
+   b.innerHTML=`
+   <div class="sec"><h3>📖 阅读打卡</h3>
+     <div class="field"><label>书名</label><input id="r_b" placeholder="如：《活着》"></div>
+     <div class="row">
+       <div class="field"><label>页数 / 分钟</label><input id="r_p" placeholder="30"></div>
+       <div class="field"><label>评分</label><select id="r_s"><option>★</option><option>★★</option><option>★★★</option><option>★★★★</option><option>★★★★★</option></select></div>
+     </div>
+     <div class="field"><label>我的收获</label><textarea id="r_n" placeholder="今天读到了什么有意思的？"></textarea></div>
+     <button class="btn" id="r_add">保存并打卡</button>
+   </div>
+   <div class="sec"><h3>💡 阅读收获墙</h3><div class="list" id="r_list"></div></div>`;
+   const list=()=>{const a=recs('reading').slice().reverse();const el=b.querySelector('#r_list');
+     if(!a.length){el.innerHTML='<div class="empty">还没有阅读记录 📚</div>';return;}
+     el.innerHTML=a.map((r,i)=>`<div class="item"><span class="dot"></span><div class="body"><div class="t">${esc(r.book||'阅读')} ${esc(r.star||'')}</div><div class="s">${esc(r.note||'')}${r.page?' · '+esc(r.page):''}</div></div><span class="dd">${fmt(r.date)}</span><button class="del" data-i="${i}">🗑</button></div>`).join('');
+     el.querySelectorAll('.del').forEach(x=>x.onclick=()=>{delRec('reading',a.length-1-(+x.dataset.i));refresh('reading');toast('已删除');});};
+   list();
+   b.querySelector('#r_add').onclick=()=>{const bk=b.querySelector('#r_b').value.trim();if(!bk){toast('请填写书名');return;}
+     addRec('reading',{date:t,book:bk,page:b.querySelector('#r_p').value,star:b.querySelector('#r_s').value,note:b.querySelector('#r_n').value.trim()});refresh('reading');toast('打卡成功 🎉');};
+  }},
+ {id:'weight',name:'减重记录',icon:'⚖️',color:'#10b981',desc:'体重曲线',
+  render(b){const t=today();const a=recs('weight').slice().sort((x,y)=>x.date<y.date?-1:1);
+   const last=a.length?a[a.length-1].weight:null;
+   const prev=a.length>1?a[a.length-2].weight:null;
+   const delta=last!=null&&prev!=null?(last-prev):null;
+   b.innerHTML=`
+   <div class="stat">
+     <div class="box"><b>${last!=null?last:'—'}</b><span>最新体重 kg</span></div>
+     <div class="box"><b>${delta!=null?(delta>0?'+':'')+delta.toFixed(1):'—'}</b><span>较上次</span></div>
+     <div class="box"><b>${a.length}</b><span>累计记录</span></div>
+   </div>
+   <div class="sec"><h3>📈 体重变化</h3><canvas id="w_cv" width="440" height="200"></canvas></div>
+   <div class="sec"><h3>⚖️ 今日称重</h3>
+     <div class="row">
+       <div class="field"><label>体重 (kg)</label><input id="w_v" type="number" step="0.1" inputmode="decimal" placeholder="如 58.5"></div>
+       <div class="field"><label>日期</label><input id="w_d" type="date" value="${t}"></div>
+     </div>
+     <div class="field"><label>备注</label><input id="w_n" placeholder="如：断食第3天"></div>
+     <button class="btn" id="w_add">记录并打卡</button>
+   </div>
+   <div class="sec"><h3>📋 历史</h3><div class="list" id="w_list"></div></div>`;
+   drawWeight(b.querySelector('#w_cv'),a);
+   const list=()=>{const el=b.querySelector('#w_list');if(!a.length){el.innerHTML='<div class="empty">还没有称重记录</div>';return;}
+     const rev=a.slice().reverse();
+     el.innerHTML=rev.map((r,i)=>`<div class="item"><span class="dot"></span><div class="body"><div class="t">${r.weight} kg</div><div class="s">${esc(r.note||'')}</div></div><span class="dd">${fmt(r.date)}</span><button class="del" data-i="${i}">🗑</button></div>`).join('');
+     el.querySelectorAll('.del').forEach(x=>x.onclick=()=>{const idx=a.length-1-(+x.dataset.i);delRec('weight',idx);refresh('weight');toast('已删除');});};
+   list();
+   b.querySelector('#w_add').onclick=()=>{const v=parseFloat(b.querySelector('#w_v').value);if(!v){toast('请输入体重');return;}
+     addRec('weight',{date:b.querySelector('#w_d').value||t,weight:v,note:b.querySelector('#w_n').value.trim()});refresh('weight');toast('已记录 🎉');};
+  }},
+ {id:'period',name:'经期记录',icon:'🩸',color:'#ec4899',desc:'周期预测',
+  render(b){const t=today();const days=recs('period').filter(r=>r.type==='start').map(r=>r.date).sort();
+   const cyc=DB.get('cfg:period_cycle',28);const plen=DB.get('cfg:period_len',5);
+   let info='';
+   if(days.length){const last=days[days.length-1];const avg=days.length>1?Math.round((parse(last)-parse(days[0]))/(days.length-1)/864e5):cyc;
+     const next=addDays(last,avg);const cd=diffDays(t,next);const inCycle=diffDays(last,t)+1;
+     const ongoing=diffDays(last,t)<=plen-1&&diffDays(last,t)>=0;
+     info=`<div class="stat">
+       <div class="box"><b>${cd>=0?cd:'—'}</b><span>${cd>=0?'距下次 (天)':'已过期'}</span></div>
+       <div class="box"><b>${ongoing?'进行中':inCycle}</b><span>${ongoing?'本次经期':'周期第几天'}</span></div>
+       <div class="box"><b>${avg}</b><span>平均周期</span></div>
+     </div>
+     <div class="sec"><h3>🔮 预测</h3><div class="s">上次来潮：<b>${pretty(last)}</b><br>预计下次：<b>${pretty(next)}</b>${ongoing?'<br><span style="color:var(--good)">当前经期进行中 🌸</span>':''}</div></div>`;
+   } else {info='<div class="sec"><div class="empty">记录第一次经期开始日，即可预测周期 🌸</div></div>';}
+   b.innerHTML=info+`
+   <div class="sec"><h3>🩸 记录经期</h3>
+     <div class="field"><label>日期（默认为今天）</label><input id="p_d" type="date" value="${t}"></div>
+     <div class="row">
+       <div class="field"><label>周期长度(天)</label><input id="p_c" type="number" value="${cyc}"></div>
+       <div class="field"><label>经期长度(天)</label><input id="p_l" type="number" value="${plen}"></div>
+     </div>
+     <button class="btn" id="p_add">标记来潮并开始打卡</button>
+     ${days.length?'<button class="btn ghost" id="p_undo" style="margin-top:10px">撤销最近一次记录</button>':''}
+   </div>
+   <div class="sec"><h3>📅 历史</h3><div class="list" id="p_list"></div></div>`;
+   const el=b.querySelector('#p_list');
+   if(days.length)el.innerHTML=days.slice().reverse().map(d=>`<div class="item"><span class="dot"></span><div class="body"><div class="t">来潮 ${pretty(d)}</div></div><span class="dd">${fmt(d)}</span></div>`).join('');
+   else el.innerHTML='<div class="empty">暂无记录</div>';
+   b.querySelector('#p_add').onclick=()=>{const d=b.querySelector('#p_d').value||t;DB.set('cfg:period_cycle',+b.querySelector('#p_c').value||28);DB.set('cfg:period_len',+b.querySelector('#p_l').value||5);
+     addRec('period',{date:d,type:'start'});refresh('period');toast('已记录 🌸');};
+   const undo=b.querySelector('#p_undo');if(undo)undo.onclick=()=>{const a=recs('period');let idx=-1;for(let i=a.length-1;i>=0;i--)if(a[i].type==='start'){idx=i;break;}if(idx>=0){delRec('period',idx);refresh('period');toast('已撤销');}};
+  }},
+ {id:'mood',name:'心情日记',icon:'🌈',color:'#f59e0b',desc:'今天心情',
+  render(b){const t=today();const moods=[['😄','很开心'],['🙂','还不错'],['😐','一般'],['😟','有点丧'],['😢','难过'],['😡','生气']];
+   b.innerHTML=`
+   <div class="sec"><h3>🌈 今日心情</h3>
+     <div class="chips" id="m_moods">${moods.map(m=>`<button class="chip" data-m="${m[0]}" data-t="${m[1]}">${m[0]} ${m[1]}</button>`).join('')}</div>
+     <div class="field" style="margin-top:12px"><label>想说点什么</label><textarea id="m_n" placeholder="今天发生了什么？"></textarea></div>
+     <button class="btn" id="m_add">记下心情并打卡</button>
+   </div>
+   <div class="sec"><h3>📔 最近心情</h3><div class="list" id="m_list"></div></div>`;
+   let sel='';
+   b.querySelectorAll('#m_moods .chip').forEach(c=>c.onclick=()=>{sel=c.dataset.m+' '+c.dataset.t;b.querySelectorAll('#m_moods .chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');});
+   const list=()=>{const a=recs('mood').slice().reverse();const el=b.querySelector('#m_list');
+     if(!a.length){el.innerHTML='<div class="empty">还没有心情记录 🌤</div>';return;}
+     el.innerHTML=a.map((r,i)=>`<div class="item"><span class="dot"></span><div class="body"><div class="t">${esc(r.mood||'')}</div><div class="s">${esc(r.note||'')}</div></div><span class="dd">${fmt(r.date)}</span><button class="del" data-i="${i}">🗑</button></div>`).join('');
+     el.querySelectorAll('.del').forEach(x=>x.onclick=()=>{delRec('mood',a.length-1-(+x.dataset.i));refresh('mood');toast('已删除');});};
+   list();
+   b.querySelector('#m_add').onclick=()=>{if(!sel){toast('请先选择心情');return;}addRec('mood',{date:t,mood:sel,note:b.querySelector('#m_n').value.trim()});refresh('mood');toast('已记录 💛');};
+  }},
+ {id:'expense',name:'每日记账',icon:'💰',color:'#ef4444',desc:'花销明细',
+  render(b){const t=today();const a=recs('expense');const month=a.filter(r=>r.date.slice(0,7)===t.slice(0,7));
+   const todaySum=a.filter(r=>r.date===t).reduce((s,r)=>s+(+r.amount||0),0);
+   const monthSum=month.reduce((s,r)=>s+(+r.amount||0),0);
+   b.innerHTML=`
+   <div class="stat">
+     <div class="box"><b>${todaySum.toFixed(0)}</b><span>今日支出</span></div>
+     <div class="box"><b>${monthSum.toFixed(0)}</b><span>本月支出</span></div>
+     <div class="box"><b>${a.length}</b><span>总笔数</span></div>
+   </div>
+   <div class="sec"><h3>💸 记一笔</h3>
+     <div class="row">
+       <div class="field"><label>金额</label><input id="x_a" type="number" step="0.01" inputmode="decimal" placeholder="0.00"></div>
+       <div class="field"><label>类别</label><select id="x_c"><option>餐饮</option><option>交通</option><option>购物</option><option>居住</option><option>娱乐</option><option>医疗</option><option>教育</option><option>其他</option></select></div>
+     </div>
+     <div class="field"><label>备注</label><input id="x_n" placeholder="如：午餐"></div>
+     <button class="btn" id="x_add">保存并打卡</button>
+   </div>
+   <div class="sec"><h3>📒 明细（最近20笔）</h3><div class="list" id="x_list"></div></div>`;
+   const list=()=>{const el=b.querySelector('#x_list');const rev=a.slice().reverse().slice(0,20);
+     if(!rev.length){el.innerHTML='<div class="empty">还没有记账 💰</div>';return;}
+     el.innerHTML=rev.map((r,i)=>`<div class="item"><span class="dot"></span><div class="body"><div class="t">${r.category} · ${r.amount} 元</div><div class="s">${esc(r.note||'')}</div></div><span class="dd">${fmt(r.date)}</span><button class="del" data-i="${i}">🗑</button></div>`).join('');
+     el.querySelectorAll('.del').forEach(x=>x.onclick=()=>{const idx=a.length-1-(+x.dataset.i);delRec('expense',idx);refresh('expense');toast('已删除');});};
+   list();
+   b.querySelector('#x_add').onclick=()=>{const v=parseFloat(b.querySelector('#x_a').value);if(!v){toast('请输入金额');return;}
+     addRec('expense',{date:t,amount:v,category:b.querySelector('#x_c').value,note:b.querySelector('#x_n').value.trim()});refresh('expense');toast('已记账 💰');};
+  }},
+ {id:'savings',name:'存钱计划',icon:'🐷',color:'#14b8a6',desc:'攒钱进度',
+  render(b){const t=today();const goal=DB.get('goal:savings',null);const dep=recs('savings');
+   const saved=dep.reduce((s,r)=>s+(+r.amount||0),0);
+   const statHtml = goal ? `<div class="stat">
+     <div class="box"><b>${saved.toFixed(0)}</b><span>已攒 (元)</span></div>
+     <div class="box"><b>${goal.target}</b><span>目标 (元)</span></div>
+     <div class="box"><b>${goal.target?Math.round(saved/goal.target*100):0}%</b><span>进度</span></div>
+   </div>
+   <div class="sec"><h3>📊 进度</h3><div class="bar"><i style="width:${goal.target?Math.min(100,Math.round(saved/goal.target*100)):0}%"></i></div>
+     <div class="s" style="margin-top:8px">${goal.target&&saved>=goal.target?'🎉 已达成目标！':(goal.deadline?('距离 '+pretty(goal.deadline)+' 还有 '+Math.max(0,diffDays(t,goal.deadline))+' 天'):'')}</div></div>` : '';
+   b.innerHTML=`
+   <div class="sec"><h3>🎯 目标设置</h3>
+     <div class="row">
+       <div class="field"><label>目标金额</label><input id="s_tg" type="number" inputmode="numeric" value="${goal?goal.target:''}" placeholder="如 50000"></div>
+       <div class="field"><label>截止日期</label><input id="s_dl" type="date" value="${goal?goal.deadline:t}"></div>
+     </div>
+     <button class="btn ghost" id="s_set">保存目标</button>
+   </div>
+   ${statHtml}
+   <div class="sec"><h3>🐷 存入一笔</h3>
+     <div class="row">
+       <div class="field"><label>金额</label><input id="s_a" type="number" step="0.01" inputmode="decimal" placeholder="如 200"></div>
+       <div class="field"><label>备注</label><input id="s_n" placeholder="如：工资结余"></div>
+     </div>
+     <button class="btn" id="s_add">存入并打卡</button>
+   </div>
+   <div class="sec"><h3>📜 存入记录</h3><div class="list" id="s_list"></div></div>`;
+   const el=b.querySelector('#s_list');
+   if(dep.length)el.innerHTML=dep.slice().reverse().map((r,i)=>`<div class="item"><span class="dot"></span><div class="body"><div class="t">+${r.amount} 元</div><div class="s">${esc(r.note||'')}</div></div><span class="dd">${fmt(r.date)}</span><button class="del" data-i="${i}">🗑</button></div>`).join('');
+   else el.innerHTML='<div class="empty">还没有存入记录</div>';
+   el.querySelectorAll('.del').forEach(x=>x.onclick=()=>{const idx=dep.length-1-(+x.dataset.i);delRec('savings',idx);refresh('savings');toast('已删除');});
+   b.querySelector('#s_set').onclick=()=>{DB.set('goal:savings',{target:+b.querySelector('#s_tg').value||0,deadline:b.querySelector('#s_dl').value||t});refresh('savings');toast('目标已保存');};
+   b.querySelector('#s_add').onclick=()=>{const v=parseFloat(b.querySelector('#s_a').value);if(!v){toast('请输入金额');return;}addRec('savings',{date:t,amount:v,note:b.querySelector('#s_n').value.trim()});refresh('savings');toast('已存入 🐷');};
+  }},
+ {id:'travel',name:'旅行规划',icon:'✈️',color:'#0ea5e9',desc:'行程清单',
+  render(b){const a=recs('travel');
+   b.innerHTML=`
+   <div class="sec"><h3>✈️ 新建行程</h3>
+     <div class="field"><label>目的地 / 名称</label><input id="tr_n" placeholder="如：日本大阪 5 日"></div>
+     <div class="row">
+       <div class="field"><label>出发</label><input id="tr_s" type="date"></div>
+       <div class="field"><label>返程</label><input id="tr_e" type="date"></div>
+     </div>
+     <button class="btn" id="tr_add">添加行程</button>
+   </div>
+   <div id="tr_list"></div>`;
+   const list=()=>{const el=b.querySelector('#tr_list');if(!a.length){el.innerHTML='<div class="empty">还没有行程计划 ✈️</div>';return;}
+     el.innerHTML=a.slice().reverse().map((tr,i)=>{const idx=a.length-1-i;const items=(tr.items||[]);const done=items.filter(it=>it.done).length;
+       return `<div class="trip ${tr.done?'done':''}">
+         <div class="th"><div class="tt">${esc(tr.name)}</div><button class="del" data-idx="${idx}">🗑</button></div>
+         <div class="s">${tr.start?fmt(tr.start):''}${tr.end?' → '+fmt(tr.end):''} · 清单 ${done}/${items.length}</div>
+         <div class="row" style="margin-top:8px"><input id="tr_new_${idx}" placeholder="添加待办，如：订机票"><button class="btn sm" data-add="${idx}">+</button></div>
+         <div id="tr_items_${idx}">${items.map((it,j)=>`<label class="cb"><input type="checkbox" data-idx="${idx}" data-j="${j}" ${it.done?'checked':''}> <span>${esc(it.text)}</span></label>`).join('')||'<div class="s" style="padding:6px 0">暂无待办</div>'}</div>
+       </div>`;}).join('');
+     el.querySelectorAll('.del').forEach(x=>x.onclick=()=>{delRec('travel',+x.dataset.idx);refresh('travel');toast('已删除');});
+     el.querySelectorAll('[data-add]').forEach(x=>x.onclick=()=>{const idx=+x.dataset.add;const inp=b.querySelector('#tr_new_'+idx);const v=inp.value.trim();if(!v)return;const arr=recs('travel');arr[arr.length-1-idx].items=arr[arr.length-1-idx].items||[];arr[arr.length-1-idx].items.push({text:v,done:false});setRecs('travel',arr);refresh('travel');});
+     el.querySelectorAll('input[type=checkbox]').forEach(cb=>cb.onchange=()=>{const idx=+cb.dataset.idx,j=+cb.dataset.j;const arr=recs('travel');arr[arr.length-1-idx].items[j].done=cb.checked;setRecs('travel',arr);const left=arr[arr.length-1-idx].items.filter(it=>!it.done).length;if(left===0){arr[arr.length-1-idx].done=true;setRecs('travel',arr);toast('清单全部完成 🎉');}refresh('travel');});
+   };
+   list();
+   b.querySelector('#tr_add').onclick=()=>{const n=b.querySelector('#tr_n').value.trim();if(!n){toast('请填写目的地');return;}addRec('travel',{date:today(),name:n,start:b.querySelector('#tr_s').value,end:b.querySelector('#tr_e').value,items:[],done:false});refresh('travel');toast('已添加 ✈️');};
+  }},
+ {id:'parent',name:'亲子趣事',icon:'👶',color:'#f472b6',desc:'温馨记录',
+  render(b){const t=today();
+   b.innerHTML=`
+   <div class="sec"><h3>👶 记录趣事</h3>
+     <div class="field"><label>标题</label><input id="pa_t" placeholder="如：宝宝第一次自己穿鞋"></div>
+     <div class="field"><label>内容</label><textarea id="pa_c" placeholder="发生了什么有趣的事？"></textarea></div>
+     <div class="field"><label>配图（可选，存本地）</label><input id="pa_img" type="file" accept="image/*"></div>
+     <button class="btn" id="pa_add">保存并打卡</button>
+   </div>
+   <div class="sec"><h3>🌟 趣事时间线</h3><div class="list" id="pa_list"></div></div>`;
+   const list=()=>{const a=recs('parent').slice().reverse();const el=b.querySelector('#pa_list');
+     if(!a.length){el.innerHTML='<div class="empty">还没有记录，记下第一个温馨瞬间吧 👶</div>';return;}
+     el.innerHTML=a.map((r,i)=>`<div class="item"><span class="dot"></span><div class="body"><div class="t">${esc(r.title||'趣事')}</div>${r.img?`<img src="${r.img}" style="max-width:120px;border-radius:10px;margin-top:6px">`:''}<div class="s">${esc(r.content||'')}</div></div><span class="dd">${fmt(r.date)}</span><button class="del" data-i="${i}">🗑</button></div>`).join('');
+     el.querySelectorAll('.del').forEach(x=>x.onclick=()=>{delRec('parent',a.length-1-(+x.dataset.i));refresh('parent');toast('已删除');});};
+   list();
+   b.querySelector('#pa_add').onclick=()=>{const ti=b.querySelector('#pa_t').value.trim();if(!ti){toast('请填写标题');return;}
+     const f=b.querySelector('#pa_img').files[0];const done=(img)=>{addRec('parent',{date:t,title:ti,content:b.querySelector('#pa_c').value.trim(),img:img||null});refresh('parent');toast('已记录 💕');};
+     if(f){const rd=new FileReader();rd.onload=()=>{let d=rd.result;if(d.length>300000)d=d.slice(0,50);done(d);};rd.readAsDataURL(f);}else done(null);
+   };
+  }},
+ {id:'edu',name:'教育辅导',icon:'🎓',color:'#6366f1',desc:'拼音/算术/英语',
+  render(b){let tab='pinyin';
+   const draw=()=>{
+     b.innerHTML=`<div class="tabs">
+        <button data-t="pinyin" class="${tab==='pinyin'?'on':''}">拼音</button>
+        <button data-t="arith" class="${tab==='arith'?'on':''}">算术</button>
+        <button data-t="en" class="${tab==='en'?'on':''}">英语启蒙</button>
+     </div><div id="edu_body"></div>`;
+     b.querySelectorAll('.tabs button').forEach(x=>x.onclick=()=>{tab=x.dataset.t;draw();});
+     const eb=b.querySelector('#edu_body');
+     if(tab==='pinyin')renderPinyin(eb);
+     else if(tab==='arith')renderArith(eb);
+     else renderEn(eb);
+   };
+   draw();
+  }}
+];
+const M_BY=Object.fromEntries(MODULES.map(m=>[m.id,m]));
+/* ---------- 教育子模块 ---------- */
+const PINYIN=[['bà ba','爸爸'],['mā ma','妈妈'],['gē ge','哥哥'],['jiě jie','姐姐'],['yé ye','爷爷'],['nǎi nai','奶奶'],
+ ['xiǎo gǒu','小狗'],['xiǎo māo','小猫'],['hóng huā','红花'],['lán tiān','蓝天'],['bái yún','白云'],['lǜ shù','绿树'],
+ ['shū bāo','书包'],['qiān bǐ','铅笔'],['píng guǒ','苹果'],['xiāng jiāo','香蕉'],['xuě huā','雪花'],['yuè liang','月亮'],
+ ['tài yáng','太阳'],['shān shuǐ','山水'],['huǒ chē','火车'],['fēi jī','飞机'],['yǔ sǎn','雨伞'],['mù mǎ','木马']];
+const EN_WORDS=[['🐶','dog','狗'],['🐱','cat','猫'],['🐘','elephant','大象'],['🦁','lion','狮子'],['🐯','tiger','老虎'],['🐰','rabbit','兔子'],
+ ['🍎','apple','苹果'],['🍌','banana','香蕉'],['🍓','strawberry','草莓'],['🍉','watermelon','西瓜'],['🍇','grape','葡萄'],['🍊','orange','橘子'],
+ ['🔴','red','红色'],['🟡','yellow','黄色'],['🔵','blue','蓝色'],['🟢','green','绿色'],['⚪','white','白色'],['⚫','black','黑色'],
+ ['1','one','一'],['2','two','二'],['3','three','三'],['4','four','四'],['5','five','五'],['10','ten','十'],
+ ['👨','father','爸爸'],['👩','mother','妈妈'],['👧','girl','女孩'],['👦','boy','男孩'],['⭐','star','星星'],['🌞','sun','太阳']];
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function flashCard(eb,data,frontKey,picKey,backKey,revealLabel){
+  let order=shuffle(data);let i=0;let reveal=false;
+  const card=()=>{const it=order[i];
+    eb.innerHTML=`<div class="card-flip" id="fc">
+        ${picKey?`<div class="pic">${it[picKey]}</div>`:''}
+        <div class="big">${reveal?it[backKey]:it[frontKey]}</div>
+        <div class="hint">${reveal?('点击切换下一张 · '+revealLabel):'点击卡片查看答案'}</div>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn ghost sm" id="prev">‹ 上一张</button>
+        <button class="btn ghost sm" id="rnd">🎲 随机</button>
+        <button class="btn ghost sm" id="next">下一张 ›</button>
+      </div>
+      <div class="s" style="text-align:center;color:var(--sub);margin-top:8px">第 ${i+1} / ${order.length} 张</div>`;
+    eb.querySelector('#fc').onclick=()=>{reveal=!reveal;card();};
+    eb.querySelector('#prev').onclick=()=>{i=(i-1+order.length)%order.length;reveal=false;card();};
+    eb.querySelector('#next').onclick=()=>{i=(i+1)%order.length;reveal=false;card();};
+    eb.querySelector('#rnd').onclick=()=>{i=Math.floor(Math.random()*order.length);reveal=false;card();};
+  };
+  card();
+}
+function renderPinyin(eb){flashCard(eb,PINYIN,0,null,1,'拼音');}
+function renderEn(eb){flashCard(eb,EN_WORDS,1,0,2,'中文意思');}
+function renderArith(eb){
+  let score={c:0,t:0};let q=null;
+  const gen=()=>{const op=Math.random()<0.5?'+':'-';let a,b;
+    if(op==='+'){a=Math.floor(Math.random()*20);b=Math.floor(Math.random()*20);}
+    else{a=Math.floor(Math.random()*20)+1;b=Math.floor(Math.random()*(a+1));}
+    q={a,b,op,ans:op==='+'?a+b:a-b};};
+  const ui=()=>{eb.innerHTML=`
+    <div class="sec" style="text-align:center"><h3>🧮 算术练习</h3>
+      <div class="big" style="font-size:40px;font-weight:800;margin:8px 0">${q.a} ${q.op} ${q.b} = ?</div>
+      <div class="field" style="max-width:200px;margin:0 auto"><input id="ans" type="number" inputmode="numeric" placeholder="答案"></div>
+      <button class="btn" id="chk" style="margin-top:10px">检查</button>
+      <div class="quiz-fb" id="fb"></div>
+      <div class="s" style="margin-top:8px">正确率：<b id="sc">${score.t?Math.round(score.c/score.t*100):0}%</b>（${score.c}/${score.t}）</div>
+    </div>`;
+    eb.querySelector('#chk').onclick=()=>{const v=parseInt(eb.querySelector('#ans').value,10);if(isNaN(v)){toast('请输入答案');return;}
+      score.t++;const fb=eb.querySelector('#fb');if(v===q.ans){score.c++;fb.textContent='✅ 答对啦！';fb.className='quiz-fb ok';}else{fb.textContent='❌ 正确答案：'+q.ans;fb.className='quiz-fb no';}
+      eb.querySelector('#sc').textContent=Math.round(score.c/score.t*100)+'%';
+      setTimeout(()=>{gen();ui();},900);};
+  };
+  gen();ui();
+}
+/* ---------- 体重图表 ---------- */
+function drawWeight(cv,a){const ctx=cv.getContext('2d');const W=cv.width,H=cv.height;ctx.clearRect(0,0,W,H);
+  if(a.length<1){ctx.fillStyle='#9aa5b1';ctx.font='14px sans-serif';ctx.textAlign='center';ctx.fillText(a.length?'至少需要2个数据点':'暂无数据',W/2,H/2);return;}
+  const vals=a.map(r=>+r.weight);const min=Math.min(...vals),max=Math.max(...vals);const pad=(max-min)*0.15||1;const lo=min-pad,hi=max+pad;
+  const dark=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const grid=dark?'#28323f':'#e6ebf2';const ink=dark?'#e8edf4':'#1f2733';
+  const X=i=>40+(W-60)*(a.length===1?0.5:i/(a.length-1));
+  const Y=v=>20+(H-50)*(1-(v-lo)/(hi-lo));
+  ctx.strokeStyle=grid;ctx.lineWidth=1;for(let k=0;k<=3;k++){const y=20+(H-50)*k/3;ctx.beginPath();ctx.moveTo(40,y);ctx.lineTo(W-20,y);ctx.stroke();
+    ctx.fillStyle=ink;ctx.font='10px sans-serif';ctx.textAlign='right';ctx.fillText((hi-(hi-lo)*k/3).toFixed(1),36,y+3);}
+  ctx.strokeStyle='#10b981';ctx.lineWidth=2.5;ctx.beginPath();a.forEach((r,i)=>{const x=X(i),y=Y(+r.weight);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();
+  a.forEach((r,i)=>{const x=X(i),y=Y(+r.weight);ctx.fillStyle='#10b981';ctx.beginPath();ctx.arc(x,y,3.5,0,7);ctx.fill();});
+  ctx.fillStyle=ink;ctx.font='10px sans-serif';ctx.textAlign='center';a.forEach((r,i)=>{if(i%Math.ceil(a.length/6)===0||i===a.length-1)ctx.fillText(fmt(r.date),X(i),H-6);});
+}
+/* ---------- 打卡栏 ---------- */
+function renderCk(id){const bar=document.getElementById('ckbar');const on=checkedToday(id);const st=streakOf(id);
+  bar.innerHTML=`<div class="st">${on?'✅ 今天已打卡':'○ 今天还没打卡'}<br><span style="font-size:11px">连续 ${st} 天</span></div>
+    <button class="ckbtn ${on?'on':''}" id="ckbtn">${on?'已打卡 ✓':'今日打卡'}</button>`;
+  bar.querySelector('#ckbtn').onclick=()=>{const now=toggleCk(id,today());renderCk(id);renderHome();toast(now?'打卡成功 🎉':'已取消打卡');};}
+/* ---------- 渲染首页 ---------- */
+function renderHome(){const t=today();let done=0;
+  const html=MODULES.map(m=>{const on=checkedToday(m.id);if(on)done++;const st=streakOf(m.id);
+    return `<div class="tile" data-id="${m.id}">
+      <div class="done">${on?'✅':''}</div>
+      <div class="ic" style="background:${m.color}22;color:${m.color}">${m.icon}</div>
+      <div class="nm">${m.name}</div>
+      <div class="meta">${m.desc}</div>
+      ${st>0?`<span class="streak">🔥 ${st}天</span>`:''}
+    </div>`;}).join('');
+  document.getElementById('grid').innerHTML=html;
+  document.querySelectorAll('.tile').forEach(el=>el.onclick=()=>openModule(el.dataset.id));
+  document.getElementById('pNum').textContent=done;
+  document.getElementById('pTot').textContent=MODULES.length;
+  document.getElementById('pBar').style.width=(done/MODULES.length*100)+'%';
+  const d=new Date();document.getElementById('dateLine').textContent=`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 星期${WK[d.getDay()]}`;
+}
+/* ---------- 打开模块 ---------- */
+function openModule(id){const m=M_BY[id];document.getElementById('detailTitle').textContent=m.icon+' '+m.name;
+  renderCk(id);const body=document.getElementById('moduleBody');body.innerHTML='';m.render(body);showView('detail');}
+function refresh(id){renderCk(id);renderHome();const m=M_BY[id];const body=document.getElementById('moduleBody');body.innerHTML='';m.render(body);}
+/* ---------- 设置：导出/导入 ---------- */
+function openSettings(){const bg=document.createElement('div');bg.className='modal-bg';
+  bg.innerHTML=`<div class="modal"><h3>⚙️ 数据备份</h3>
+    <div class="row"><button class="btn" id="ex">⬇️ 导出备份</button><button class="btn ghost" id="im">⬆️ 导入备份</button></div>
+    <p class="s" style="color:var(--sub);font-size:12px">数据全部保存在本机（离线可用）。换手机或重装前请先导出备份，再导入恢复。</p>
+    <input type="file" id="file" accept="application/json" class="hide">
+    <div class="row" style="margin-top:6px"><button class="btn ghost" id="close">关闭</button></div></div>`;
+  document.body.appendChild(bg);
+  bg.querySelector('#close').onclick=()=>bg.remove();bg.onclick=e=>{if(e.target===bg)bg.remove();};
+  bg.querySelector('#ex').onclick=()=>{const data=DB.all();const blob=new Blob([JSON.stringify(data)],{type:'application/json'});const u=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=u;a.download='生活工作台备份_'+today()+'.json';a.click();URL.revokeObjectURL(u);toast('已导出');};
+  const file=bg.querySelector('#file');
+  bg.querySelector('#im').onclick=()=>file.click();
+  file.onchange=()=>{const f=file.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const o=JSON.parse(rd.result);let n=0;for(const k in o){localStorage.setItem(k,o[k]);n++;}renderHome();toast('已导入 '+n+' 项');bg.remove();}catch(e){toast('文件格式错误');}};rd.readAsText(f);};
+}
+/* ---------- 安装指引 ---------- */
+function openHelp(){const bg=document.createElement('div');bg.className='modal-bg';
+  bg.innerHTML=`<div class="modal"><h3>📲 安装到 iPhone 主屏幕</h3>
+    <p class="s" style="color:var(--sub);font-size:13px;line-height:1.7">
+    本应用是<strong>单个 HTML 文件</strong>，所有数据存在手机本地，可离线使用。<br><br>
+    <b>方式一（最稳妥·永久离线）：</b><br>
+    1️⃣ 把这个 <b>index.html</b> 传到 iPhone（AirDrop / 微信文件 / 邮件给自己 / 存到「文件」App）。<br>
+    2️⃣ 在 iPhone 上用 <b>Safari</b> 打开它。<br>
+    3️⃣ 点底部 <b>分享</b> 按钮（⬆️方框箭头）→ <b>添加到主屏幕</b> → 取名「生活工作台」→ 添加。<br>
+    4️⃣ 桌面上就有了一个 App 图标，点开即用，完全离线、数据不丢。<br><br>
+    <b>方式二（想要一个可复制的链接）：</b><br>
+    把 index.html 拖到 <b>Netlify Drop</b>（app.netlify.com/drop，免注册）或部署到 <b>GitHub Pages</b>，即可得到永久 https 链接。复制该链接，在 Safari 打开 → 同样「添加到主屏幕」即可。<br><br>
+    ⚠️ 注意：一定要用 <b>Safari</b> 打开并「添加到主屏幕」，普通浏览器书签不会变成全屏 App。
+    </p>
+    <div class="row" style="margin-top:6px"><button class="btn" id="close">明白了</button></div></div>`;
+  document.body.appendChild(bg);
+  bg.querySelector('#close').onclick=()=>bg.remove();bg.onclick=e=>{if(e.target===bg)bg.remove();};}
+/* ---------- 启动 ---------- */
+document.getElementById('backBtn').onclick=()=>{renderHome();showView('home');};
+document.getElementById('gearBtn').onclick=openSettings;
+document.getElementById('helpBtn').onclick=openHelp;
+renderHome();showView('home');
+</script>
+</body>
+</html>
